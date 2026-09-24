@@ -1,0 +1,355 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f5f7;
+    color: #1f2937;
+}
+
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px;
+}
+
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+header h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+
+header p {
+    color: #64748b;
+}
+
+
+.batch-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+
+.batch-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+
+.batch-grid span {
+    display: block;
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+
+.card h3 {
+    margin-bottom: 15px;
+}
+
+
+.value {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+
+.controls {
+    display: flex;
+    gap: 15px;
+    margin: 25px 0;
+}
+
+
+button {
+    border: none;
+    padding: 13px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: #1f2937;
+    color: white;
+    font-size: 14px;
+}
+
+
+button:hover {
+    opacity: 0.85;
+}
+
+
+.records {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+
+.record-summary {
+    display: flex;
+    gap: 40px;
+    margin: 20px 0;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+
+th {
+    background: #f8fafc;
+}
+
+
+@media (max-width: 800px) {
+
+    .dashboard,
+    .batch-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+}
+.integrity {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.verified {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    background: #dcfce7;
+}
+
+.tampered {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    background: #fee2e2;
+}
+.sync-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.sync-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.sync-grid span {
+    display: block;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.sync-grid strong {
+    font-size: 18px;
+}
+
+.sync-message {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    text-align: center;
+    font-weight: bold;
+}
+.blockchain {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.ledger-summary {
+    display: flex;
+    gap: 40px;
+    margin: 20px 0;
+}
+
+.block {
+    background: #f8fafc;
+    border: 1px solid #dbe3ec;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.block-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.block p {
+    margin: 8px 0;
+}
+
+.hash {
+    font-family: monospace;
+    font-size: 13px;
+    color: #475569;
+}
+
+.verified-text {
+    color: #15803d;
+}
+
+.tampered-text {
+    color: #dc2626;
+}
+.trace-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+.journey {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 20px 5px;
+}
+
+.journey-stage {
+    min-width: 150px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f1f5f9;
+    text-align: center;
+    border: 2px solid transparent;
+}
+
+.journey-stage.current {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.journey-stage.completed {
+    border-color: #16a34a;
+    background: #f0fdf4;
+}
+
+.stage-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.journey-stage strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.journey-stage small {
+    display: block;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.journey-arrow {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.stage-button {
+    margin-top: 10px;
+}
+
+.stage-message {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.qr-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.qr-card p {
+    margin: 10px 0 20px;
+    color: #64748b;
+}
+
+#qrcode {
+    margin: 20px auto;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.trace-reading {
+    border: 1px solid #dbe3ec;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 12px;
+    background: #f8fafc;
+}
+
+.trace-reading p {
+    margin-top: 6px;
+}

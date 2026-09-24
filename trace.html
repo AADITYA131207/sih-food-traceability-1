@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Batch Traceability</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container trace-page">
+
+    <header>
+
+        <h1>🥭 Batch Traceability</h1>
+
+        <p>
+            Farm-to-Fork Journey
+        </p>
+
+    </header>
+
+
+    <section class="batch-card">
+
+        <h2>MANGO-M001</h2>
+
+        <p>
+            Product: <strong>Mango</strong>
+        </p>
+
+        <p>
+            Quantity: <strong>100 kg</strong>
+        </p>
+
+        <p>
+            Origin: <strong>Farm F01</strong>
+        </p>
+
+    </section>
+
+
+    <section class="trace-card">
+
+        <h2>Supply Chain Journey</h2>
+
+        <div id="traceJourney"
+             class="journey">
+
+        </div>
+
+    </section>
+
+
+    <section class="trace-card">
+
+        <h2>Environmental Monitoring</h2>
+
+        <div id="traceReadings">
+
+        </div>
+
+    </section>
+
+
+    <section class="trace-card">
+
+        <h2>Integrity Status</h2>
+
+        <div id="traceIntegrity"
+             class="verified">
+
+            Checking...
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+async function loadTrace() {
+
+    const response =
+        await fetch("/data");
+
+    const data =
+        await response.json();
+
+
+    const journey =
+        document.getElementById(
+            "traceJourney"
+        );
+
+
+    data.stages.forEach(
+        (stage, index) => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "journey-stage";
+
+
+            if (stage.time) {
+
+                item.classList.add(
+                    "completed"
+                );
+
+            }
+
+
+            item.innerHTML = `
+
+                <div class="stage-icon">
+                    ${stage.icon}
+                </div>
+
+                <strong>
+                    ${stage.name}
+                </strong>
+
+                <small>
+                    ${stage.location}
+                </small>
+
+                <small>
+                    ${
+                        stage.time ||
+                        "Pending"
+                    }
+                </small>
+
+            `;
+
+
+            journey.appendChild(
+                item
+            );
+
+
+            if (
+                index <
+                data.stages.length - 1
+            ) {
+
+                const arrow =
+                    document.createElement(
+                        "div"
+                    );
+
+                arrow.className =
+                    "journey-arrow";
+
+                arrow.innerText =
+                    "→";
+
+                journey.appendChild(
+                    arrow
+                );
+
+            }
+
+        }
+    );
+
+
+    const readings =
+        document.getElementById(
+            "traceReadings"
+        );
+
+
+    if (data.readings.length === 0) {
+
+        readings.innerHTML =
+            "<p>No sensor records available.</p>";
+
+    }
+    else {
+
+        data.readings
+            .slice()
+            .reverse()
+            .forEach(
+                reading => {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+                    card.className =
+                        "trace-reading";
+
+
+                    card.innerHTML = `
+
+                        <strong>
+                            ${reading.timestamp}
+                        </strong>
+
+                        <p>
+                            Temperature:
+                            ${reading.temperature} °C
+                        </p>
+
+                        <p>
+                            Humidity:
+                            ${reading.humidity} %
+                        </p>
+
+                        <p>
+                            Ethylene:
+                            ${reading.ethylene} ppm
+                        </p>
+
+                        <p>
+                            Status:
+                            ${reading.status}
+                        </p>
+
+                    `;
+
+
+                    readings.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+    }
+
+
+    const integrity =
+        document.getElementById(
+            "traceIntegrity"
+        );
+
+
+    const verify =
+        await fetch("/verify");
+
+    const result =
+        await verify.json();
+
+
+    if (result.verified) {
+
+        integrity.innerText =
+            "✅ Cryptographically Verified — No Tampering Detected.";
+
+    }
+    else {
+
+        integrity.innerText =
+            "❌ Integrity Verification Failed.";
+
+        integrity.className =
+            "tampered";
+
+    }
+
+}
+
+
+loadTrace();
+
+</script>
+
+</body>
+
+</html>
