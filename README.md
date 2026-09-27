@@ -1,45 +1,73 @@
-# 🥭 Low-Cost IoT Blockchain Nodes for Farm-to-Fork Traceability
-
-## SIH26232
+🥭 Low-Cost IoT Blockchain Nodes for Farm-to-Fork Traceability
+SIH26232
 
 A low-cost IoT-based traceability prototype for monitoring environmental conditions during the farm-to-fork journey of agricultural products.
 
-## Problem
+Problem
 
 Agricultural products such as mangoes require suitable environmental conditions during transportation and storage.
 
 Network interruptions and lack of continuous monitoring can result in:
 
-- Loss of sensor data
-- Difficulty in monitoring environmental conditions
-- Difficulty in verifying data integrity
-
-## Proposed Solution
+Loss of sensor data
+Difficulty in monitoring environmental conditions
+Difficulty in verifying data integrity
+Proposed Solution
 
 Our system uses an ESP32-based IoT sensor node to collect environmental data such as:
 
-- Temperature
-- Humidity
-- Gas/VOC
+Temperature
+Humidity
+Gas/VOC
 
 The system generates SHA-256 hashes for sensor records and uses previous-hash linking to provide tamper-evident data integrity.
 
 When network connectivity is unavailable, sensor records are stored locally on an SD card and can be synchronized when connectivity is restored.
 
-## System Architecture
+System Architecture
 
-```text
 DHT22 + Gas/VOC Sensor
-          ↓
-        ESP32
-          ↓
-    SHA-256 Hashing
-          ↓
-     Wi-Fi / Internet
-          ↓
-      Flask API
-          ↓
-    Web Dashboard
-          ↓
- Blockchain-inspired
-      Ledger
+↓
+ESP32
+↓
+SHA-256 Hashing
+↓
+Wi-Fi / Internet
+↓
+Flask API
+↓
+Web Dashboard
+↓
+Blockchain-inspired Ledger
+
+Key Features
+🌡️ Temperature and humidity monitoring
+🧪 Gas/VOC condition monitoring
+💾 Offline data buffering using MicroSD
+🔐 SHA-256 hash-based data integrity
+☁️ Cloud-based monitoring dashboard
+📦 Batch-level traceability
+📱 QR-based batch access
+🔄 Automatic synchronization after network recovery
+⛓️ Blockchain-inspired hash-linked ledger
+Prototype
+
+The prototype is validated using an ESP32-based Wokwi simulation connected to a deployed Flask cloud dashboard.
+
+Sensor values generated in the Wokwi simulation are transmitted to the cloud API and displayed on the live dashboard.
+
+Project Links
+🌐 Live Dashboard: https://sih-food-traceability-1.onrender.com
+💻 GitHub Repository: https://github.com/AADITYA131207/sih-food-traceability-1
+🔌 Wokwi Simulation: YOUR_WOKWI_LINK_HERE
+🎥 Prototype Demo Video: YOUR_VIDEO_LINK_HERE
+Future Development
+Physical ESP32 hardware prototype
+Rugged enclosure for agricultural and industrial environments
+Cellular connectivity using NB-IoT / LTE-M
+MQTT-based communication
+Encrypted local storage
+Dedicated ethylene sensing
+Solar / thermal energy harvesting
+Decentralized ledger integration
+Field validation under moisture, dust and vibration conditions
