@@ -1,290 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Batch Traceability</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Traceability - AgriTrace</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<div class="container trace-page">
+<div class="container">
 
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
     <header>
-
-        <h1>🥭 Batch Traceability</h1>
-
-        <p>
-            Farm-to-Fork Journey
-        </p>
-
+        <h1>🥭 Batch Provenance Certificate</h1>
+        <p>Farm-to-Fork Cryptographic Journey & Condition Audit</p>
     </header>
 
-
+    <!-- ================================================= -->
+    <!-- BATCH INFORMATION -->
+    <!-- ================================================= -->
     <section class="batch-card">
-
-        <h2>MANGO-M001</h2>
-
-        <p>
-            Product: <strong>Mango</strong>
-        </p>
-
-        <p>
-            Quantity: <strong>100 kg</strong>
-        </p>
-
-        <p>
-            Origin: <strong>Farm F01</strong>
-        </p>
-
+        <h2>📦 Batch Information</h2>
+        <div class="batch-grid">
+            <div>
+                <span>Batch ID</span>
+                <strong id="traceBatchId">MANGO-M001</strong>
+            </div>
+            <div>
+                <span>Product</span>
+                <strong id="traceProduct">Mango</strong>
+            </div>
+            <div>
+                <span>Quantity</span>
+                <strong id="traceQuantity">100 kg</strong>
+            </div>
+            <div>
+                <span>Origin</span>
+                <strong id="traceOrigin">Farm F01</strong>
+            </div>
+        </div>
     </section>
 
-
-    <section class="trace-card">
-
-        <h2>Supply Chain Journey</h2>
-
-        <div id="traceJourney"
-             class="journey">
-
+    <!-- ================================================= -->
+    <!-- DATA INTEGRITY STATUS -->
+    <!-- ================================================= -->
+    <section class="integrity">
+        <h2>🔐 Provenance & Integrity Status</h2>
+        <div id="traceIntegrity" style="padding:15px; border-radius:8px; font-weight:600; text-align:center;">
+            Checking ledger cryptographic proof...
         </div>
-
     </section>
 
-
+    <!-- ================================================= -->
+    <!-- FARM TO FORK JOURNEY -->
+    <!-- ================================================= -->
     <section class="trace-card">
-
-        <h2>Environmental Monitoring</h2>
-
-        <div id="traceReadings">
-
-        </div>
-
+        <h2>🌱 Verified Custody Journey</h2>
+        <div id="traceJourney" class="journey"></div>
     </section>
 
-
-    <section class="trace-card">
-
-        <h2>Integrity Status</h2>
-
-        <div id="traceIntegrity"
-             class="verified">
-
-            Checking...
-
+    <!-- ================================================= -->
+    <!-- SENSOR AUDIT RECORDS -->
+    <!-- ================================================= -->
+    <section class="records">
+        <h2>📊 Cold-Chain Telemetry Log</h2>
+        <div class="record-summary">
+            <div>
+                Total Logged Packets:
+                <strong id="traceTotalRecords">0</strong>
+            </div>
         </div>
-
+        <table>
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Temperature</th>
+                    <th>Humidity</th>
+                    <th>Gas / VOC</th>
+                    <th>Status</th>
+                    <th>Cryptographic Hash</th>
+                </tr>
+            </thead>
+            <tbody id="traceRecordsTable"></tbody>
+        </table>
     </section>
 
 </div>
 
-
 <script>
+async function loadTraceData() {
+    try {
+        const response = await fetch("/data");
+        const data = await response.json();
 
-async function loadTrace() {
-
-    const response =
-        await fetch("/data");
-
-    const data =
-        await response.json();
-
-
-    const journey =
-        document.getElementById(
-            "traceJourney"
-        );
-
-
-    data.stages.forEach(
-        (stage, index) => {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-            item.className =
-                "journey-stage";
-
-
-            if (stage.time) {
-
-                item.classList.add(
-                    "completed"
-                );
-
-            }
-
-
-            item.innerHTML = `
-
-                <div class="stage-icon">
-                    ${stage.icon}
-                </div>
-
-                <strong>
-                    ${stage.name}
-                </strong>
-
-                <small>
-                    ${stage.location}
-                </small>
-
-                <small>
-                    ${
-                        stage.time ||
-                        "Pending"
-                    }
-                </small>
-
-            `;
-
-
-            journey.appendChild(
-                item
-            );
-
-
-            if (
-                index <
-                data.stages.length - 1
-            ) {
-
-                const arrow =
-                    document.createElement(
-                        "div"
-                    );
-
-                arrow.className =
-                    "journey-arrow";
-
-                arrow.innerText =
-                    "→";
-
-                journey.appendChild(
-                    arrow
-                );
-
-            }
-
+        // 1. Batch Details
+        if (data.batch) {
+            document.getElementById("traceBatchId").innerText = data.batch.id;
+            document.getElementById("traceProduct").innerText = data.batch.product;
+            document.getElementById("traceQuantity").innerText = data.batch.quantity;
+            document.getElementById("traceOrigin").innerText = data.batch.origin;
         }
-    );
 
+        // 2. Journey Milestones
+        renderJourney(data.stages, data.current_stage);
 
-    const readings =
-        document.getElementById(
-            "traceReadings"
-        );
+        // 3. Sensor Records Table
+        renderRecords(data.readings);
 
+        // 4. Verify Cryptographic Integrity
+        verifyLedger();
 
-    if (data.readings.length === 0) {
-
-        readings.innerHTML =
-            "<p>No sensor records available.</p>";
-
+    } catch (err) {
+        console.error("Failed to load trace data:", err);
     }
-    else {
-
-        data.readings
-            .slice()
-            .reverse()
-            .forEach(
-                reading => {
-
-                    const card =
-                        document.createElement(
-                            "div"
-                        );
-
-                    card.className =
-                        "trace-reading";
-
-
-                    card.innerHTML = `
-
-                        <strong>
-                            ${reading.timestamp}
-                        </strong>
-
-                        <p>
-                            Temperature:
-                            ${reading.temperature} °C
-                        </p>
-
-                        <p>
-                            Humidity:
-                            ${reading.humidity} %
-                        </p>
-
-                        <p>
-                            Ethylene:
-                            ${reading.ethylene} ppm
-                        </p>
-
-                        <p>
-                            Status:
-                            ${reading.status}
-                        </p>
-
-                    `;
-
-
-                    readings.appendChild(
-                        card
-                    );
-
-                }
-            );
-
-    }
-
-
-    const integrity =
-        document.getElementById(
-            "traceIntegrity"
-        );
-
-
-    const verify =
-        await fetch("/verify");
-
-    const result =
-        await verify.json();
-
-
-    if (result.verified) {
-
-        integrity.innerText =
-            "✅ Cryptographically Verified — No Tampering Detected.";
-
-    }
-    else {
-
-        integrity.innerText =
-            "❌ Integrity Verification Failed.";
-
-        integrity.className =
-            "tampered";
-
-    }
-
 }
 
+function renderJourney(stages, current) {
+    const container = document.getElementById("traceJourney");
+    container.innerHTML = "";
 
-loadTrace();
+    stages.forEach((stage, index) => {
+        const item = document.createElement("div");
+        item.className = "journey-stage";
 
+        if (index < current) {
+            item.classList.add("completed");
+        }
+        if (index === current) {
+            item.classList.add("current");
+        }
+
+        item.innerHTML = `
+            <div class="stage-icon">${stage.icon}</div>
+            <strong>${stage.name}</strong>
+            <small>${stage.location}</small>
+            <small>${stage.time ? stage.time : "Pending"}</small>
+        `;
+
+        container.appendChild(item);
+
+        if (index < stages.length - 1) {
+            const arrow = document.createElement("div");
+            arrow.className = "journey-arrow";
+            arrow.innerText = "→";
+            container.appendChild(arrow);
+        }
+    });
+}
+
+function renderRecords(readings) {
+    const table = document.getElementById("traceRecordsTable");
+    table.innerHTML = "";
+    document.getElementById("traceTotalRecords").innerText = readings.length;
+
+    if (!readings || readings.length === 0) {
+        const emptyRow = document.createElement("tr");
+        emptyRow.innerHTML = `<td colspan="6" style="text-align:center; padding:15px;">No telemetry logged for this batch yet.</td>`;
+        table.appendChild(emptyRow);
+        return;
+    }
+
+    readings.slice().reverse().forEach(reading => {
+        const row = document.createElement("tr");
+        const hash = reading.hash || reading.server_hash || "";
+        row.innerHTML = `
+            <td>${reading.timestamp}</td>
+            <td>${reading.temperature} °C</td>
+            <td>${reading.humidity} %</td>
+            <td>${reading.gas_raw}</td>
+            <td>${reading.status}</td>
+            <td><small>${hash ? hash.substring(0, 16) + '...' : '--'}</small></td>
+        `;
+        table.appendChild(row);
+    });
+}
+
+async function verifyLedger() {
+    const box = document.getElementById("traceIntegrity");
+    try {
+        const response = await fetch("/verify");
+        const result = await response.json();
+
+        if (result.verified) {
+            box.innerHTML = "✅ NIST FIPS 180-4 SHA-256 HASH CHAIN VERIFIED — Tamper-Proof Audit Complete.";
+            box.style.background = "#dcfce7";
+            box.style.color = "#15803d";
+            box.style.border = "1px solid #86efac";
+        } else {
+            box.innerHTML = "❌ TAMPER WARNING: " + result.message;
+            box.style.background = "#fee2e2";
+            box.style.color = "#b91c1c";
+            box.style.border = "1px solid #fca5a5";
+        }
+    } catch (e) {
+        box.innerText = "⚠️ Unable to contact cryptographic verification engine.";
+        box.style.background = "#fef3c7";
+        box.style.color = "#b45309";
+    }
+}
+
+window.onload = function() {
+    loadTraceData();
+};
 </script>
 
 </body>
-
 </html>
